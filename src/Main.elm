@@ -72,7 +72,16 @@ parseTeam =
         |= Parser.getChompedString (Parser.chompUntil "</a>")
         |. Parser.chompUntil "<td"
         |= (Parser.loop [] parsePick
-                |> Parser.map (List.filter ((/=) "--"))
+                |> Parser.map
+                    (List.map
+                        (\pick ->
+                            if pick == "&nbsp;" then
+                                ""
+
+                            else
+                                pick
+                        )
+                    )
            )
         |. Parser.chompUntil "<strong>"
         |. Parser.symbol "<strong>"
